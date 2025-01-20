@@ -6,7 +6,7 @@ import { use, useEffect, useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import { Markdown } from '@/components/markdown';
 import { FlowPreview } from '@/components/flow/flow-preview';
-const Page = ({ params }: { params: Promise<{ id: string }> }) => {
+const DiscoverPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const { templates, isLoading, isError } = useTemplates();
   const [template, setTemplate] = useState<any>();
@@ -50,12 +50,12 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
           <Markdown>{template.description}</Markdown>
         </span>
       </div>
-      <div className="flex flex-col md:flex-row items-center justify-center w-full gap-2 text-sm">
+      <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-2 text-sm">
         <TemplateCard
           template={template}
           index={index}
           suppressLink
-          className="w-full max-w-sm"
+          className="w-full max-w-sm h-full min-h-[420px]"
         />
         <ReactFlowProvider key="reactflow-template">
           <FlowPreview
@@ -68,4 +68,4 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   );
 };
 
-export default Page;
+export default DiscoverPage;

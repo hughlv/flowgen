@@ -10,6 +10,7 @@ import { Icons } from '@/components/icons';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 
 export const TemplateEmpty = () => {
   return (
@@ -128,13 +129,9 @@ export const TemplateCard = ({
   };
   return (
     <ConditionalLink
-      className={clsx(
-        'group card w-80 bg-base-content/10 border border-base-content/10',
-        className,
-        {
-          'hover:shadow-box hover:shadow-base-content/20 hover:border-base-content/20':
-            !suppressLink,
-        }
+      className={cn(
+        'group card flex flex-col justify-between h-full w-80 border',
+        className
       )}
     >
       <figure>
@@ -178,7 +175,7 @@ export const TemplateCard = ({
         {isAuthed && (
           <div className="relative flex items-center justify-end gap-2 text-xs">
             <Button
-              variant="outline"
+              variant="default"
               size="sm"
               className="flex items-center gap-1"
               onClick={handleChat}
