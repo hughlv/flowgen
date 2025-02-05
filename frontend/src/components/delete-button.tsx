@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { Icons } from '@/components/icons';
+import { Button } from './ui/button';
 
 export const DeleteButton = ({
   onDelete: _onDelete,
@@ -20,17 +21,17 @@ export const DeleteButton = ({
     setDeleting(false);
   };
   return (
-    <div
+    <Button
+      variant="ghost"
+      size="icon"
       onClick={() => onDelete()}
-      className={clsx(
-        'cursor-pointer btn btn-sm btn-ghost btn-square text-red-500',
-        className
-      )}
-      data-tooltip-id="default-tooltip"
-      data-tooltip-content={tooltip}
-      data-tooltip-place={place ?? 'bottom'}
+      className={clsx(className)}
     >
-      {deleting ? <div className="loading loading-xs" /> : <Icons.trash />}
-    </div>
+      {deleting ? (
+        <Icons.spinner className="animate-spin size-4" />
+      ) : (
+        <Icons.trash className="size-4" />
+      )}
+    </Button>
   );
 };

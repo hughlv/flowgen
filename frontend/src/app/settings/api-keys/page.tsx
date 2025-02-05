@@ -2,8 +2,9 @@
 
 import { CopyButton } from '@/components/copy-button';
 import { DeleteButton } from '@/components/delete-button';
+import { DashboardHeader } from '@/components/header';
 import { Icons } from '@/components/icons';
-import { PopupDialog } from '@/components/popup-dialog';
+import { DashboardShell } from '@/components/shell';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,6 +15,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { toast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import clsx from 'clsx';
@@ -43,7 +51,8 @@ const ApiKeyText = ({ apikey }: { apikey: string }) => {
         {text}
       </span>
       <Button
-        className="btn btn-sm btn-ghost btn-square"
+        variant="ghost"
+        size="icon"
         onClick={() => setIsShowing(!isShowing)}
       >
         {isShowing ? (
@@ -57,13 +66,13 @@ const ApiKeyText = ({ apikey }: { apikey: string }) => {
   );
 };
 
-const CreateKeyDialog = ({ show, onClose }: any) => {
+const CreateKeyDialog = ({ show, setShow }: any) => {
   const [name, setName] = useState('Default Name');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const onSubmit = (e: any) => {
-    e.preventDefault();
+    e.prevenTableCellefault();
     setLoading(true);
     fetch('/api/api-keys', {
       method: 'POST',
@@ -75,7 +84,7 @@ const CreateKeyDialog = ({ show, onClose }: any) => {
     })
       .then((resp) => resp.json())
       .then((json) => {
-        onClose(true);
+        setShow(true);
       })
       .catch((e) => {
         console.error(e);
@@ -84,15 +93,15 @@ const CreateKeyDialog = ({ show, onClose }: any) => {
       .finally(() => setLoading(false));
   };
   return (
-    <Dialog open={show} onOpenChange={onClose}>
-      <DialogTrigger>
+    <Dialog open={show} onOpenChange={setShow}>
+      <DialogTrigger asChild>
         <Button>Create API Key</Button>
       </DialogTrigger>
-      <DialogTitle>Create API Key</DialogTitle>
-      <DialogDescription>
-        Create a new API key to use in your projects.
-      </DialogDescription>
       <DialogContent>
+        <DialogTitle>Create API Key</DialogTitle>
+        <DialogDescription>
+          Create a new API key to use in your projects.
+        </DialogDescription>
         <form className="flex flex-col gap-3 w-full" onSubmit={onSubmit}>
           <Label htmlFor="name">Name</Label>
           <Input
@@ -158,11 +167,6 @@ const Page = () => {
     fetchKeys();
   }, []);
 
-  const onCloseCreateKeyDialog = (refresh: boolean) => {
-    setShowCreateKeyDialog(false);
-    if (refresh) fetchKeys();
-  };
-
   const onDeleteKey = async (key: any) => {
     await fetch(`/api/api-keys/${key.id}`, {
       method: 'DELETE',
@@ -192,55 +196,50 @@ const Page = () => {
   }
 
   return (
-    <>
-      <title>API Keys | Agentok Studio</title>
-      <div className="flex flex-col w-full gap-3 ">
-        <div className="flex items-center justify-between w-full gap-2 py-2">
-          <h2 className="text-2xl font-bold">API Keys</h2>
-          <CreateKeyDialog
-            show={showCreateKeyDialog}
-            onClose={onCloseCreateKeyDialog}
-          />
-        </div>
-        <table className="table border-transparent rounded-lg bg-base-content/20">
-          <thead>
-            <tr className="flex w-full font-bold">
-              <td className="w-12 lg:w-32">Name</td>
-              <td className="flex flex-grow lg:min-w-80">Key</td>
-              <td className="w-40 hidden lg:flex">Created</td>
-              <td className="items-center justify-center gap-2 w-28 hidden lg:flex">
-                Actions
-              </td>
-            </tr>
-          </thead>
-          <tbody className="gap-2">
-            {keys.map((key) => {
-              return (
-                <tr key={key.id} className="flex items-center w-full py-2">
-                  <td className="w-12 lg:w-32">{key.name || '(No name)'}</td>
-                  <td className="flex flex-grow lg:min-w-80">
-                    <ApiKeyText apikey={key.key} />
-                  </td>
-                  <td className="hidden lg:flex">
-                    {new Date(key.created_at).toLocaleString()}
-                  </td>
-                  <td className="items-center justify-center gap-2 w-28 hidden lg:flex">
-                    <DeleteButton
-                      tooltip="Delete API Key"
-                      onDelete={() => onDeleteKey(key)}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+    <DashboardShell>
+      <div className="flex items-center justify-between w-full gap-2 py-2">
+        <DashboardHeader heading="API Keys" text="Manage your API keys" />
         <CreateKeyDialog
           show={showCreateKeyDialog}
-          onClose={onCloseCreateKeyDialog}
+          setShow={setShowCreateKeyDialog}
         />
       </div>
-    </>
+      <Table className="border-transparent rounded-lg bg-base-content/20">
+        <TableHeader>
+          <TableRow className="flex w-full font-bold">
+            <TableCell className="w-12 lg:w-32">Name</TableCell>
+            <TableCell className="flex flex-grow lg:min-w-80">Key</TableCell>
+            <TableCell className="w-40 hidden lg:flex">Created</TableCell>
+            <TableCell className="items-center justify-center gap-2 w-28 hidden lg:flex">
+              Actions
+            </TableCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody className="gap-2">
+          {keys.map((key) => {
+            return (
+              <TableRow key={key.id} className="flex items-center w-full py-2">
+                <TableCell className="w-12 lg:w-32">
+                  {key.name || '(No name)'}
+                </TableCell>
+                <TableCell className="flex flex-grow lg:min-w-80">
+                  <ApiKeyText apikey={key.key} />
+                </TableCell>
+                <TableCell className="hidden lg:flex">
+                  {new Date(key.created_at).toLocaleString()}
+                </TableCell>
+                <TableCell className="items-center justify-center gap-2 w-28 hidden lg:flex">
+                  <DeleteButton
+                    tooltip="Delete API Key"
+                    onDelete={() => onDeleteKey(key)}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </DashboardShell>
   );
 };
 
