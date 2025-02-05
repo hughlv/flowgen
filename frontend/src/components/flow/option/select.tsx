@@ -6,10 +6,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectContent,
+  SelectValue,
 } from '@/components/ui/select';
 
 type SelectOptionProps = {
   options: { label: string; value: string }[];
+  disabled?: boolean;
 } & OptionProps;
 
 export const SelectOption = ({
@@ -19,10 +21,11 @@ export const SelectOption = ({
   onValueChange,
   options,
   compact,
+  disabled,
 }: SelectOptionProps) => {
-  let selectedIndex = 0;
-  if (data?.[name])
-    selectedIndex = options.findIndex((o) => o.value === data[name]);
+  const currentValue = data?.[name];
+  const currentOption = options.find((o) => o.value === currentValue);
+
   return (
     <div
       className={clsx('flex gap-2 text-sm', {
@@ -32,10 +35,15 @@ export const SelectOption = ({
     >
       <Label className="whitespace-nowrap">{label}</Label>
       <Select
-        value={options[selectedIndex].value}
+        value={currentValue}
         onValueChange={(value) => onValueChange && onValueChange(name, value)}
+        disabled={disabled}
       >
-        <SelectTrigger>{options[selectedIndex].label}</SelectTrigger>
+        <SelectTrigger>
+          <SelectValue placeholder="Select option">
+            {currentOption?.label || 'Select option'}
+          </SelectValue>
+        </SelectTrigger>
         <SelectContent>
           {options.map((o, i) => (
             <SelectItem key={i} value={o.value}>

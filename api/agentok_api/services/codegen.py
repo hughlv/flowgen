@@ -6,6 +6,7 @@ import textwrap
 from datetime import datetime
 import hashlib
 from pathlib import Path
+import autogen
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from jinja2.ext import do
@@ -51,6 +52,29 @@ class CodegenService:
         cache_file.write_text(code)
 
     def generate_project(self, project: Project) -> str:
+        # Initialize config_list
+        config_list = []
+
+        # Extend config_list with settings['models'] if available
+        user_settings = self.supabase.fetch_general_settings()
+        if user_settings and "general" in user_settings and 'models' in user_settings["general"]:
+            config_list.extend(user_settings["general"]["models"])
+
+        # Extend config_list with OAI_CONFIG_LIST
+        config_list.extend(autogen.config_list_from_json(
+            env_or_file="OAI_CONFIG_LIST",
+        ))
+
+        # Apply filters if any
+        if user_settings and 'filters' in user_settings:
+            config_list = autogen.filter_config(
+                config_list,
+                filter_dict={
+                    "model": user_settings['filters'].get('name', '').split(','),
+                    "tags": user_settings['filters'].get('tags', '').split(','),
+                }
+            )
+
         # Check cache first
         cache_key = self._get_cache_key(project)
         cached_code = self._get_cached_code(cache_key)
@@ -173,8 +197,10 @@ class CodegenService:
         for tool_id, tool in tool_dict.items():
             tool['code'] = self.replace_env_placeholders(tool)
 
+        # Render the template with the prepared config_list
         code = template.render(
             project=project,
+            config_list=config_list,
             user=self.supabase.get_user(),
             settings=settings,  # Account level settings include models, etc.
             nodes=flow.nodes,

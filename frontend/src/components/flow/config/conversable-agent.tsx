@@ -1,5 +1,12 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { GenericOption } from '../option/option';
+import { useSettings } from '@/hooks/use-settings';
+
+interface FieldProps {
+  label: string;
+  onChange: (value: string) => void;
+  value: string;
+}
 
 export const ConversableAgentConfig = ({
   nodeId,
@@ -8,6 +15,8 @@ export const ConversableAgentConfig = ({
   className,
   ...props
 }: any) => {
+  const { settings } = useSettings();
+
   const GENERAL_OPTIONS = [
     {
       type: 'text',
@@ -56,6 +65,17 @@ export const ConversableAgentConfig = ({
       name: 'enable_llm',
       label: 'Enable LLM',
       defaultChecked: true,
+    },
+    {
+      type: 'select',
+      name: 'model_id',
+      label: 'AI Model',
+      disabled: !data?.enable_llm,
+      options:
+        settings?.models?.map((model) => ({
+          value: model.id,
+          label: model.model,
+        })) || [],
     },
     {
       type: 'check',

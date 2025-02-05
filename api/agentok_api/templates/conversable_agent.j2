@@ -27,7 +27,11 @@ node_{{ node.id }} = {{ node.data.class_type }}(
     {%- if node.data.disable_llm %}
     llm_config=False,
     {%- else %}
+    {%- if node.data.model_id %}
+    llm_config=get_llm_config("{{ node.data.model_id }}"),
+    {%- else %}
     llm_config=llm_config,
+    {%- endif %}
     {%- endif %}
     {%- if node.data.enable_code_execution %}
     code_execution_config={"use_docker": False, "work_dir": temp_dir}, # Simplified setting for code execution

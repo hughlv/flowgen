@@ -56,7 +56,7 @@ const MessageBubble = ({ chat, message, className }: MessageBubbleProps) => {
     return (
       <Card
         className={cn(
-          'flex flex-col items-start gap-2 shadow-sm px-3 py-1 rounded-md',
+          'w-full flex flex-col items-start gap-2 shadow-sm px-3 py-1',
           resultClass,
           className
         )}
@@ -78,7 +78,7 @@ const MessageBubble = ({ chat, message, className }: MessageBubbleProps) => {
     return (
       <Card
         className={cn(
-          'flex items-center gap-2 shadow-sm px-3 py-1 bg-blue-500/20 text-blue-500 rounded-md',
+          'w-full flex items-center gap-2 shadow-sm px-3 py-1 bg-blue-500/20 text-blue-500',
           className
         )}
       >

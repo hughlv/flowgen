@@ -28,7 +28,7 @@
 {%- endif %}
 
 {{- get_imports(nodes) -}}
-{{- generate_config(project) -}}
+{{- generate_config(project, config_list) -}}
 {{- generate_conversable_agents(conversable_nodes) -}}
 {{- generate_assistants(assistant_nodes) -}}
 {{- generate_gpt_assistants(gpt_assistant_nodes) -}}

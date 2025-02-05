@@ -22,7 +22,7 @@ export const CheckOption = ({
         checked={value}
         onCheckedChange={(checked) => setValue(checked)}
         onBlur={() => onValueChange && onValueChange(name, value)}
-        className="checkbox checkbox-xs bg-transparent rounded"
+        className="bg-transparent rounded"
       />
       <Label className="whitespace-nowrap" htmlFor={name}>
         {label}
