@@ -74,7 +74,7 @@ const Navbar = () => {
           <span className="text-brand font-mono">Agentok</span>
         </Link>
       </div>
-      <div className="flex px-2 items-center gap-4 text-muted-foreground">
+      <div className="flex px-2 items-center gap-4 lg:gap-6 text-muted-foreground">
         <ProjectPicker
           className={cn({ 'text-primary': isActive('/projects') })}
         />

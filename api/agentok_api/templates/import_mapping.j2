@@ -40,10 +40,6 @@ args = parser.parse_args()
 
 import autogen
 
-# openai, whisper are optional dependencies
-# However, we beleive they are useful for other future examples, so we include them here as part of standard imports
-from openai import OpenAI
-
 {%- for import_line in import_lines|unique %}
 {{ import_line }}
 {%- endfor %}
