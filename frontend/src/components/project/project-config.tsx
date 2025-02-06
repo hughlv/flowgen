@@ -3,13 +3,14 @@ import { ScrollArea } from '../ui/scroll-area';
 import { GenericOption } from '../flow/option/option';
 import { Button } from '../ui/button';
 import { Icons } from '../icons';
-import { useReactFlow } from '@xyflow/react';
 import { toast } from '@/hooks/use-toast';
 import { toPng } from 'html-to-image';
+import { ProjectPublish } from './project-publish';
+import { useState } from 'react';
 
 export const ProjectConfig = ({ projectId }: { projectId: number }) => {
   const { project, updateProject } = useProject(projectId);
-  const instance = useReactFlow();
+  const [showPublishDialog, setShowPublishDialog] = useState(false);
 
   const handleChange = (name: string, value: any) => {
     updateProject({ [name]: value }).catch(console.error);
@@ -76,6 +77,14 @@ export const ProjectConfig = ({ projectId }: { projectId: number }) => {
           onValueChange={handleChange}
         />
         <Button
+          onClick={() => setShowPublishDialog(true)}
+          className="w-full flex items-center gap-2"
+          variant="outline"
+        >
+          <Icons.share className="w-4 h-4" />
+          Publish as Template
+        </Button>
+        <Button
           onClick={handleDownloadImage}
           className="w-full flex items-center gap-2"
           variant="outline"
@@ -83,6 +92,13 @@ export const ProjectConfig = ({ projectId }: { projectId: number }) => {
           <Icons.download className="w-4 h-4" />
           Download Canvas
         </Button>
+        {showPublishDialog && (
+          <ProjectPublish
+            show={showPublishDialog}
+            projectId={projectId}
+            onClose={() => setShowPublishDialog(false)}
+          />
+        )}
       </div>
     </ScrollArea>
   );
