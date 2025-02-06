@@ -57,7 +57,7 @@ export const ChatPicker = ({ className }: { className?: string }) => {
       <span className="font-bold text-muted-foreground">/</span>
       <Link
         href={`/chats/${activeChatId === -1 ? '' : activeChatId}`}
-        className="flex items-center gap-1 text-sm font-medium rounded-full border px-2 max-w-48 truncate text-ellipsis overflow-hidden"
+        className="flex items-center gap-1 text-sm font-medium rounded-lg border px-2 max-w-48 truncate line-clamp-1"
       >
         {activeChat?.chat?.name || 'Chats'}
       </Link>

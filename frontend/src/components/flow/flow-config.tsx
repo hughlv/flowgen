@@ -7,6 +7,7 @@ import { Icons } from '../icons';
 import { useReactFlow } from '@xyflow/react';
 import { InitializerConfig } from './config/initializer';
 import { ProjectConfig } from '../project/project-config';
+import { WebSurferConfig } from './config/websurfer';
 
 interface FlowConfigProps {
   nodeId?: string;
@@ -66,6 +67,8 @@ export const FlowConfig = ({ nodeId, edgeId, projectId }: FlowConfigProps) => {
     case 'assistant':
     case 'captain':
       return <AssistantConfig nodeId={nodeId} data={node.data} />;
+    case 'websurfer':
+      return <WebSurferConfig nodeId={nodeId} data={node.data} />;
     case 'user':
       return <UserConfig nodeId={nodeId} data={node.data} />;
     case 'groupchat':

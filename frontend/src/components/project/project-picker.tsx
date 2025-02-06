@@ -106,7 +106,7 @@ export const ProjectPicker = ({ className }: { className?: string }) => {
       <span className="font-bold text-muted-foreground">/</span>
       <Link
         href={`/projects/${activeProjectId === -1 ? '' : activeProjectId}`}
-        className="flex items-center gap-1 text-sm font-medium rounded-full border px-2 max-w-48 truncate text-ellipsis overflow-hidden"
+        className="flex items-center gap-1 text-sm font-medium rounded-lg border px-2 max-w-48 truncate overflow-hidden whitespace-nowrap"
       >
         {activeProject?.name || 'Projects'}
       </Link>

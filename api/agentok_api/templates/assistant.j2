@@ -22,6 +22,9 @@ node_{{ node.id }} = {{ node.data.class_type }}(
     {%- if node.data.compress_config %}
     compress_config={{ node.data.compress_config }},
     {%- endif %}
+    {%- if node.data.web_tool %}
+    web_tool="{{ node.data.web_tool }}",
+    {%- endif %}
     {%- if node.data.class == 'LLaVAAgent' %}
     llm_config={
         **llm_config,

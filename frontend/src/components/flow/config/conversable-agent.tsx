@@ -97,6 +97,7 @@ export const ConversableAgentConfig = ({
             />
           )
         )}
+        {props.children}
       </div>
     </ScrollArea>
   );

@@ -12,6 +12,7 @@ import { GPTAssistantNode } from '@/components/flow/node/gpt-assistant';
 import { RetrieveUserProxyAgent } from '@/components/flow/node/retrieve-user';
 import { RetrieveAssistantNode } from '@/components/flow/node/retrieve-assistant';
 import { CaptainAgentNode } from '@/components/flow/node/captain';
+import { WebSurferNode } from '@/components/flow/node/websurfer';
 // Import icons from the new icons file
 import { Icons, Icon } from '@/components/icons';
 import { LucideIcon } from 'lucide-react';
@@ -25,6 +26,7 @@ export const nodeTypes: NodeTypes = {
   note: NoteNode,
   conversable: ConversableAgent,
   captain: CaptainAgentNode,
+  websurfer: WebSurferNode,
   gpt_assistant: GPTAssistantNode,
   retrieve_user: RetrieveUserProxyAgent,
   retrieve_assistant: RetrieveAssistantNode,
@@ -45,6 +47,7 @@ export const isConversable = (node?: Node) =>
     'gpt_assistant',
     'retrieve_assistant',
     'retrieve_user',
+    'websurfer',
   ].includes(node.type);
 
 // Fields of Node Meta:
@@ -113,9 +116,16 @@ export const advancedNodes: NodeMeta[] = [
   {
     id: 'captain',
     icon: Icons.agent,
-    name: 'Captain Agent',
+    name: 'Captain',
     description: 'An agent enhanced to break down and solve complex tasks',
     class_type: 'CaptainAgent',
+  },
+  {
+    id: 'websurfer',
+    icon: Icons.globe,
+    name: 'Web Surfer',
+    description: 'A WebSurfer Agent',
+    class_type: 'WebSurferAgent',
   },
   // {
   //   id: 'retrieve_assistant',

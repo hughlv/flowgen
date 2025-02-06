@@ -83,6 +83,7 @@ import {
   UserCog,
   BookOpen,
   ArrowDownToLine,
+  Globe,
 } from 'lucide-react';
 import { Logo } from './logo';
 import { ElementType } from 'react';
@@ -164,6 +165,7 @@ export const Icons: Record<string, ElementType> = {
   chat: MessagesSquare,
   shuffle: Shuffle,
   compass: Compass,
+  globe: Globe,
   send: ArrowUp,
   stop: Square,
   robot: Bot,
