@@ -10,6 +10,7 @@ Run the service:
 
 ```bash
 poetry install
+poetry run playwright install
 poetry run uvicorn agentok_api.main:app --reload --port 5004
 ```
 
@@ -17,6 +18,7 @@ If you need to run the service with network proxy, you can use the following com
 
 ```bash
 poetry install
+poetry run playwright install
 poetry run proxychains4 uvicorn agentok_api.main:app --reload --port 5004
 ```
 

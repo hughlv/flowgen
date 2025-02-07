@@ -27,7 +27,11 @@
 """
 {%- endif %}
 
+
 {{- get_imports(nodes) -}}
+
+agentops.init(api_key=os.getenv('AGENTOPS_API_KEY'))
+
 {{- generate_config(project, config_list) -}}
 {{- generate_conversable_agents(conversable_nodes) -}}
 {{- generate_assistants(assistant_nodes) -}}
@@ -38,3 +42,5 @@
 {%- include 'tool.j2' %}
 {%- include 'tool_binding.j2' %}
 {%- include 'start_chat.j2' %}
+
+agentops.end_session("Success")

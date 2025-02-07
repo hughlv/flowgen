@@ -23,18 +23,19 @@ python-dotenv = "1.0.1"
 regex = "2024.11.6"
 requests = "2.32.3"
 starlette = "0.41.3"
-termcolor = "2.5.0"
+termcolor = "2.3.0"
 uvicorn = "^0.32.0"
 supabase = "^2.13.0"
 tavily-python = "^0.5.0"
 cohere = "^5.8.0"
 python-magic = "^0.4.27"
-autogen = { version = "0.7.3", extras = ["browser-use", "crawl4ai"] }
+autogen = { version = "0.7.3", extras = ["browser-use"] }
 httpx = {version = ">=0.26,<0.28", extras = ["socks", "http2"]}
 socksio = "^1.0.0"
 sentence-transformers = "^3.3.1"
 playwright = "^1.42.0"
 nest-asyncio = "^1.6.0"
+agentops = "^0.3.26"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.3"

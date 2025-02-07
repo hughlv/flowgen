@@ -26,7 +26,7 @@ export const WebSurferConfig = ({ nodeId, data, className, ...props }: any) => {
         label="Web Tool"
         options={[
           { value: 'browser_use', label: 'Browser Use' },
-          { value: 'crawl4ai', label: 'Crawl4AI' },
+          { value: 'crawl4ai', label: 'Crawl4AI', disabled: true },
         ]}
       />
     </ConversableAgentConfig>
