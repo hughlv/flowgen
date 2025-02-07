@@ -81,7 +81,7 @@ export const TemplateCard = ({
     e.preventDefault();
     const forkedProject = await forkProject(template);
     if (forkedProject) {
-      router.push(`/projects/${forkedProject.id}/flow`);
+      router.push(`/projects/${forkedProject.id}`);
     }
   };
   const handleChat = async (e: any) => {
