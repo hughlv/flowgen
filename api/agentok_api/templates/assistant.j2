@@ -52,6 +52,6 @@ node_{{ node.id }} = {{ node.data.class_type }}(
     llm_config=llm_config,
     {%- endif %}
 )
-
 {%- endfor %}
+
 {%- endmacro %}

@@ -58,22 +58,26 @@ class CodegenService:
         # Extend config_list with settings['models'] if available
         user_settings = self.supabase.fetch_general_settings()
         if user_settings and "general" in user_settings and 'models' in user_settings["general"]:
-            config_list.extend(user_settings["general"]["models"])
+            config_list.extend([model for model in user_settings["general"]["models"] if model["enabled"] == True])
+
+        print('config_list 1', config_list)
 
         # Extend config_list with OAI_CONFIG_LIST
         config_list.extend(autogen.config_list_from_json(
             env_or_file="OAI_CONFIG_LIST",
         ))
 
+        print('config_list 2', config_list)
+
         # Apply filters if any
-        if user_settings and 'filters' in user_settings:
-            config_list = autogen.filter_config(
-                config_list,
-                filter_dict={
-                    "model": user_settings['filters'].get('name', '').split(','),
-                    "tags": user_settings['filters'].get('tags', '').split(','),
-                }
-            )
+        # if user_settings and 'filters' in user_settings:
+        #     config_list = autogen.filter_config(
+        #         config_list,
+        #         filter_dict={
+        #             "model": user_settings['filters'].get('name', '').split(','),
+        #             "tags": user_settings['filters'].get('tags', '').split(','),
+        #         }
+        #     )
 
         # Check cache first
         cache_key = self._get_cache_key(project)
@@ -182,7 +186,7 @@ class CodegenService:
 
         # Generate tool assignments
         tool_dict = self.build_tool_dict(project)
-        tool_assignments = self.generate_tool_assignments(flow.edges, tool_dict)
+        tool_assignments = self.generate_tool_assignments(flow.edges, tool_dict, flow.nodes)
         print(tool_assignments)
         tool_dict = {
             tool_id: tool
@@ -290,10 +294,11 @@ class CodegenService:
         tools = self.supabase.fetch_tools(tool_ids)
         return {tool["id"]: tool for tool in tools}
 
-    def generate_tool_assignments(self, edges, tool_dict):
+    def generate_tool_assignments(self, edges, tool_dict, nodes):
         # Prepare the tool assignments
         tool_assignments = {}
 
+        # First, process the regular tool assignments from edges
         for edge in edges:
             if edge.get("data") is not None and edge["data"].get("tools") is not None:
                 # Iterate over edge.data.tools.llm and append node.id to the respective tool_id in llm
@@ -310,7 +315,40 @@ class CodegenService:
                             )
                         )
 
-        # Now tool_assignments contains the desired structure
+        # Now process WebSurferAgent tools
+        for edge in edges:
+            target_node = next(
+                (node for node in nodes if node["id"] == edge["target"]),
+                None
+            )
+            if target_node and target_node.get("data", {}).get("class_type") == "WebSurferAgent":
+                # Get the source node (usually a UserProxyAgent) for execution
+                source_node = next(
+                    (node for node in nodes if node["id"] == edge["source"]),
+                    None
+                )
+                if source_node:
+                    # Get the web tool type from the node's data
+                    web_tool = target_node.get("data", {}).get("web_tool", "browser_use")
+                    
+                    # Add the tool registration to the generated code
+                    # We don't need to create a mock function or add to tool_dict
+                    # Instead, we'll handle this in the template by registering websurfer.tools
+                    tool_id = f"websurfer_{target_node['id']}"
+                    if tool_id not in tool_assignments:
+                        tool_assignments[tool_id] = {
+                            "execution": [],
+                            "llm": [],
+                            "is_websurfer": True,  # Flag to indicate this is a WebSurferAgent tool
+                            "web_tool": web_tool,  # Store the web tool type
+                            "websurfer_node_id": target_node["id"]  # Store the WebSurferAgent node ID
+                        }
+                    
+                    if source_node["id"] not in tool_assignments[tool_id]["execution"]:
+                        tool_assignments[tool_id]["execution"].append(source_node["id"])
+                    if target_node["id"] not in tool_assignments[tool_id]["llm"]:
+                        tool_assignments[tool_id]["llm"].append(target_node["id"])
+
         return tool_assignments
 
     def generate_rag_assignments(self, edges):
@@ -324,35 +362,32 @@ class CodegenService:
 
         return rag_assignments
 
-    def generate_tool_envs(self, project: Project, tool_dict: dict):
+    def generate_tool_envs(self, project: Project, tool_dict: dict) -> dict:
         """Generate tool environment files for the provided project.
 
         Args:
             project (Project): The project metadata.
+            tool_dict (dict): Dictionary of tools with their metadata.
 
         Returns:
             dict: A dictionary containing the tool IDs as keys and the environment file contents as values.
         """
-        for tool in tool_dict.values():
-            meta = self.extract_tool_meta(tool["code"])
-            tool_dict[tool["id"]]["func_name"] = meta["func_name"]
-        tool_assignments = self.generate_tool_assignments(project.flow.edges, tool_dict)
-
+        # Fetch tool settings from Supabase
         tool_settings = self.supabase.fetch_tool_settings()
 
-        # Clean unused tools from tool_settings that not included in tool_assignments
+        # Filter tool_settings to only include tools in tool_dict
         tool_settings = {
             int(tool_id): settings
             for tool_id, settings in tool_settings.items()
-            if int(tool_id) in tool_assignments
+            if int(tool_id) in tool_dict
         }
 
+        # Render the template for each tool
         template = self.env.get_template("tool_env.j2")
-        tool_envs = {}
-        for tool_id, tool_settings in tool_settings.items():
-            tool_envs[tool_id] = template.render(tool_settings=tool_settings)
-
-        print("tool_envs", tool_envs)
+        tool_envs = {
+            tool_id: template.render(tool_settings=tool_settings[tool_id])
+            for tool_id in tool_settings
+        }
 
         return tool_envs
 

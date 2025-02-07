@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 
 type SelectOptionProps = {
-  options: { label: string; value: string }[];
+  options: { label: string; value: string; disabled?: boolean }[];
   disabled?: boolean;
 } & OptionProps;
 
@@ -46,7 +46,7 @@ export const SelectOption = ({
         </SelectTrigger>
         <SelectContent>
           {options.map((o, i) => (
-            <SelectItem key={i} value={o.value}>
+            <SelectItem key={i} value={o.value} disabled={o.disabled}>
               {o.label}
             </SelectItem>
           ))}

@@ -14,7 +14,8 @@ import { Collapsible } from '@/components/ui/collapsible';
 import {
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@radix-ui/react-collapsible';
+} from '@/components/ui/collapsible';
+import { Switch } from '@/components/ui/switch';
 
 const ModelForm = ({ model: sourceModel, onSave }: any) => {
   const [model, setModel] = useState('');
@@ -140,6 +141,12 @@ const ModelCard = ({ model, onSave, onDelete }: any) => {
           <div className="flex items-center gap-2">
             <Icons.brain className="w-5 h-5" />
             <h1 className="font-bold">Model: {model.model}</h1>
+            <Switch
+              checked={model.enabled}
+              onCheckedChange={(checked: boolean) =>
+                onSave({ ...model, enabled: checked })
+              }
+            />
           </div>
           <div>
             <Button

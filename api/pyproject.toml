@@ -17,7 +17,7 @@ diskcache = "5.6.3"
 fastapi = "0.115.5"
 gotrue = "2.11.0"
 Jinja2 = "3.1.4"
-Pillow = "11.0.0"
+Pillow = "10.4"
 pydantic = ">=2.10.4"
 python-dotenv = "1.0.1"
 regex = "2024.11.6"
@@ -29,10 +29,12 @@ supabase = "^2.13.0"
 tavily-python = "^0.5.0"
 cohere = "^5.8.0"
 python-magic = "^0.4.27"
-autogen = { version = "0.7.3", extras = ["browser-use"] }
+autogen = { version = "0.7.3", extras = ["browser-use", "crawl4ai"] }
 httpx = {version = ">=0.26,<0.28", extras = ["socks", "http2"]}
 socksio = "^1.0.0"
 sentence-transformers = "^3.3.1"
+playwright = "^1.42.0"
+nest-asyncio = "^1.6.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.3"

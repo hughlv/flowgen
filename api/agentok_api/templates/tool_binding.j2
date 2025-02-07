@@ -3,26 +3,35 @@
     {# Iterate over each tool_id in tool_assignments #}
     {%- for tool_id, assignments in tool_assignments.items() %}
 
+        {%- if assignments.is_websurfer %}
+# Register WebSurferAgent tools
+            {%- for node_id in assignments.execution %}
+# Register all tools from WebSurferAgent to UserProxyAgent for execution
+for tool in node_{{ assignments.websurfer_node_id }}.tools:
+    tool.register_for_execution(node_{{ node_id }})
+            {%- endfor %}
+        {%- else %}
 {# Register LLM tools #}
-        {%- if assignments.llm -%}
+            {%- if assignments.llm -%}
 # Register LLM tools to agents
-            {%- set tool = tool_dict[tool_id] %}
-            {%- for node_id in assignments.llm %}
+                {%- set tool = tool_dict[tool_id] %}
+                {%- for node_id in assignments.llm %}
 node_{{ node_id }}.register_for_llm(
     name="{{ tool['func_name'] }}",
     description="{{ tool['description'] }}"  # This field is only required when registering to LLM
 )({{ tool['func_name'] }})
-            {%- endfor %}
-        {%- endif %}
+                {%- endfor %}
+            {%- endif %}
 
 {# Register Execution tools #}
-        {%- if assignments.execution -%}
+            {%- if assignments.execution -%}
 # Register Execution tools to agents
-            {%- set tool = tool_dict[tool_id] %}
-            {%- for node_id in assignments.execution %}
+                {%- set tool = tool_dict[tool_id] %}
+                {%- for node_id in assignments.execution %}
 node_{{ node_id }}.register_for_execution(name="{{ tool['func_name'] }}")({{ tool['func_name'] }})
-            {%- endfor %}
-        {%- endif -%}
+                {%- endfor %}
+            {%- endif -%}
+        {%- endif %}
 
     {%- endfor -%}
 {%- endif -%}
