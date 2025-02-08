@@ -139,6 +139,16 @@ export const AuthButton = () => {
             Report an Issue
           </Link>
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
+            href="https://app.agentops.ai/overview"
+            target="_blank"
+            className={cn('flex items-center justify-start p-2 gap-2')}
+          >
+            <Icons.circleGauge className="h-4 w-4" />
+            AgentOps Dashboard
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="flex items-center justify-between gap-2 p-2 py-1 rounded-md hover:bg-muted">
           <div className="flex items-center gap-2">

@@ -298,31 +298,35 @@ export function UserAuthForm({
               </span>
             </div>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => handleOAuthSignIn('github')}
-            disabled={isLoading || isGitHubLoading}
-          >
-            {isGitHubLoading ? (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Icons.github className="mr-2 h-4 w-4" />
-            )}{' '}
-            Github
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => handleOAuthSignIn('google')}
-            disabled={isLoading || isGoogleLoading}
-          >
-            {isGoogleLoading ? (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Icons.google className="mr-2 h-4 w-4" />
-            )}{' '}
-            Google
-          </Button>
+          <div className="flex gap-2 w-full">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => handleOAuthSignIn('github')}
+              disabled={isLoading || isGitHubLoading}
+            >
+              {isGitHubLoading ? (
+                <Icons.spinner className="h-4 w-4 animate-spin" />
+              ) : (
+                <Icons.github className="h-4 w-4" />
+              )}
+              Github
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => handleOAuthSignIn('google')}
+              disabled={isLoading || isGoogleLoading}
+            >
+              {isGoogleLoading ? (
+                <Icons.spinner className="h-4 w-4 animate-spin" />
+              ) : (
+                <Icons.google className="h-4 w-4" />
+              )}
+              Google
+            </Button>
+          </div>
         </>
       )}
     </div>
