@@ -52,8 +52,10 @@ export const NoteNode = memo(
           <span className="text-xs">Note</span>
         </div>
         <NodeResizeControl
-          minWidth={200}
-          minHeight={100}
+          className="custom-resize-handle"
+          position={'bottom-right'}
+          minWidth={400}
+          minHeight={300}
           style={{
             background: 'transparent',
             border: 'none',

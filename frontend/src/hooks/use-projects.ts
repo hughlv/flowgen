@@ -57,6 +57,9 @@ export const initialNodes: Node[] = [
         "Click **Chat** icon on the right bottom to show the chat pane, and in chat pane, select a sample question to start the conversation.",
     },
     position: { x: 87, y: 740 },
+    width: 300,
+    height: 50,
+    selected: false,
   },
 ];
 

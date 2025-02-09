@@ -60,15 +60,6 @@ class CodegenService:
         if user_settings and "general" in user_settings and 'models' in user_settings["general"]:
             config_list.extend([model for model in user_settings["general"]["models"] if model["enabled"] == True])
 
-        print('config_list 1', config_list)
-
-        # Extend config_list with OAI_CONFIG_LIST
-        config_list.extend(autogen.config_list_from_json(
-            env_or_file="OAI_CONFIG_LIST",
-        ))
-
-        print('config_list 2', config_list)
-
         # Apply filters if any
         # if user_settings and 'filters' in user_settings:
         #     config_list = autogen.filter_config(

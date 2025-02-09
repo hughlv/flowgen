@@ -1,6 +1,9 @@
 {%- macro generate_config(project, config_list) %}
 llm_config = {
-    "config_list": {{ config_list }},
+    "config_list": {{ config_list }} + autogen.config_list_from_json(
+        env_or_file="OAI_CONFIG_LIST",
+        file_location=".",
+    ),
     {%- if project['settings'] is not none and project['settings'].get('timeout') is not none %}
     "timeout": {{ project['settings'].timeout }},
     {%- endif %}
