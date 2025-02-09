@@ -311,7 +311,6 @@ export const FlowCanvas = ({
     (event: React.DragEvent) => {
       event.preventDefault();
       const data = JSON.parse(event.dataTransfer.getData('application/json'));
-      console.log('ondrop data', data);
       if (!data || !flowParent.current) return;
 
       const flowBounds = flowParent.current.getBoundingClientRect();
