@@ -9,7 +9,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
-import { PopoverClose } from '../ui/popover';
 
 interface NodeItemProps {
   id: string;
@@ -19,6 +18,13 @@ interface NodeItemProps {
   class_type: string;
   width?: number;
   height?: number;
+  onAddNode: (
+    id: string,
+    name: string,
+    class_type: string,
+    width?: number,
+    height?: number
+  ) => void;
 }
 
 const NodeItem = ({
@@ -29,12 +35,14 @@ const NodeItem = ({
   class_type,
   width,
   height,
+  onAddNode,
 }: NodeItemProps) => {
   const NodeIcon = getNodeIcon(type);
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     nodeData: any
   ) => {
+    console.log('onDragStart nodeData', nodeData);
     event.dataTransfer.setData('application/json', JSON.stringify(nodeData));
   };
 
@@ -42,12 +50,13 @@ const NodeItem = ({
     <div
       className={cn(
         'flex flex-col items-start gap-2 w-full h-full p-2 rounded-md border cursor-grab',
-        'hover:bg-muted'
+        'hover:bg-muted/80 hover:border-primary/20'
       )}
       draggable
       onDragStart={(e: React.DragEvent<HTMLDivElement>) =>
         onDragStart(e, { id, name, type, class_type, width, height })
       }
+      onClick={() => onAddNode(id, name, class_type, width, height)}
     >
       <div className="flex items-center gap-2 w-full h-full">
         <NodeIcon className="w-4 h-4 shrink-0" />
@@ -59,6 +68,19 @@ const NodeItem = ({
     </div>
   );
 };
+
+const nodeCategories = [
+  {
+    value: 'basic',
+    title: 'Basic',
+    nodes: basicNodes,
+  },
+  {
+    value: 'advanced',
+    title: 'Advanced',
+    nodes: advancedNodes,
+  },
+];
 
 export const NodeList = ({
   onAddNode,
@@ -72,48 +94,35 @@ export const NodeList = ({
   ) => void;
 }) => {
   return (
-    <Accordion type="multiple" defaultValue={['Basic']} className="w-full p-2">
-      {[
-        {
-          title: 'Basic',
-          nodes: basicNodes,
-        },
-        {
-          title: 'Advanced',
-          nodes: advancedNodes,
-        },
-      ].map(({ title, nodes }) => (
-        <AccordionItem value={title} className="border-none" key={title}>
+    <Accordion
+      type="multiple"
+      defaultValue={nodeCategories.map((category) => category.value)}
+      className="w-full p-2"
+    >
+      {nodeCategories.map(({ value, title, nodes }) => (
+        <AccordionItem
+          value={value}
+          className="border-none"
+          key={value}
+          defaultChecked={true}
+        >
           <AccordionTrigger className="text-sm outline-none py-2">
             {title}
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-col gap-1">
-              {nodes.map((node) => (
-                <PopoverClose
-                  key={node.id}
-                  onClick={() =>
-                    onAddNode(
-                      node.id,
-                      node.name,
-                      node.class_type,
-                      node.width,
-                      node.height
-                    )
-                  }
-                >
-                  <NodeItem
-                    id={node.id}
-                    name={node.name}
-                    type={node.id}
-                    description={node.description}
-                    class_type={node.class_type}
-                    width={node.width}
-                    height={node.height}
-                  />
-                </PopoverClose>
-              ))}
-            </div>
+          <AccordionContent className="flex flex-col gap-1 w-full">
+            {nodes.map((node) => (
+              <NodeItem
+                key={node.id}
+                id={node.id}
+                name={node.name}
+                type={node.id}
+                description={node.description}
+                class_type={node.class_type}
+                width={node.width}
+                height={node.height}
+                onAddNode={onAddNode}
+              />
+            ))}
           </AccordionContent>
         </AccordionItem>
       ))}

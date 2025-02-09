@@ -237,14 +237,6 @@ export const FlowCanvas = ({
     [setNodes, setIsDirty]
   );
 
-  const handleModeChange = useCallback(
-    (mode: 'flow' | 'python') => {
-      setMode(mode);
-      onModeChange(mode);
-    },
-    [onModeChange]
-  );
-
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
       if (changes.some((change) => change.type !== 'select')) {
@@ -319,6 +311,7 @@ export const FlowCanvas = ({
     (event: React.DragEvent) => {
       event.preventDefault();
       const data = JSON.parse(event.dataTransfer.getData('application/json'));
+      console.log('ondrop data', data);
       if (!data || !flowParent.current) return;
 
       const flowBounds = flowParent.current.getBoundingClientRect();
