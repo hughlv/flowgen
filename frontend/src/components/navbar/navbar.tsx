@@ -93,6 +93,7 @@ const Navbar = () => {
                 'hidden lg:flex'
               )}
             >
+              <item.icon className="w-4 h-4" />
               {item.label}
             </Link>
           );

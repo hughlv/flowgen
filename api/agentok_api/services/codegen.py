@@ -177,6 +177,7 @@ class CodegenService:
 
         # Generate tool assignments
         tool_dict = self.build_tool_dict(project)
+        print(tool_dict)
         tool_assignments = self.generate_tool_assignments(flow.edges, tool_dict, flow.nodes)
         print(tool_assignments)
         tool_dict = {
@@ -184,6 +185,7 @@ class CodegenService:
             for tool_id, tool in tool_dict.items()
             if tool_id in tool_assignments
         }
+        print(tool_dict)
         
         # Generate tool envs and replace placeholders
         self.generate_tool_envs(project, tool_dict)
@@ -283,7 +285,24 @@ class CodegenService:
                 tool_ids.extend(edge["data"]["tools"])
 
         tools = self.supabase.fetch_tools(tool_ids)
-        return {tool["id"]: tool for tool in tools}
+        tool_dict = {}
+        
+        for tool in tools:
+            # Extract metadata from the tool's code
+            try:
+                meta_info = self.extract_tool_meta(tool["code"])
+                # Merge the meta_info with the tool data
+                tool["func_name"] = meta_info["func_name"]
+                tool["description"] = meta_info["description"]
+                tool["signatures"] = meta_info["signatures"]
+                tool["variables"] = meta_info["variables"]
+                tool_dict[tool["id"]] = tool
+            except Exception as e:
+                print(f"Warning: Failed to extract metadata for tool {tool['id']}: {str(e)}")
+                # Still include the tool even if metadata extraction fails
+                tool_dict[tool["id"]] = tool
+        
+        return tool_dict
 
     def generate_tool_assignments(self, edges, tool_dict, nodes):
         # Prepare the tool assignments
