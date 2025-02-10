@@ -124,8 +124,8 @@ export function useTools() {
 }
 
 export function useTool(toolId: number) {
-  const { isLoading, isError, updateTool, deleteTool, getToolById } =
-    useTools();
+  const { tools, isLoading, isError, updateTool, deleteTool } = useTools();
+  const tool = tools.find((t: Tool) => t.id === toolId);
 
   const [isUpdating, setIsUpdating] = useState(false);
   const handleUpdateTool = useCallback(
@@ -147,7 +147,7 @@ export function useTool(toolId: number) {
   }, [deleteTool, toolId]);
 
   return {
-    tool: getToolById(toolId),
+    tool,
     isLoading,
     isError,
     updateTool: handleUpdateTool,
