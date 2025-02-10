@@ -135,6 +135,10 @@ Once services are running, access:
 - API: http://localhost:5004 (OpenAPI docs: http://localhost:5004/docs)
 - Frontend: http://localhost:2855
 
+### Observability with AgentOps
+
+We use [AgentOps](https://agentops.ai) to monitor the performance of the system. To enable it, you can set environment variable `AGENTOPS_API_KEY` in `api/.env`.
+
 ## 👨‍💻 Contributing
 
 We welcome all contributions! This includes code, documentation, and other project aspects. Open a [GitHub Issue](https://github.com/hughlv/agentok/issues/new) or join our [Discord Server](https://discord.gg/xBQxwRSWfm).

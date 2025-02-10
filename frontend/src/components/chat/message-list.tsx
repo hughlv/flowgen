@@ -127,7 +127,7 @@ const MessageBubble = ({ chat, message, className }: MessageBubbleProps) => {
   } else if (message.sender) {
     messageHeader = (
       <div className="chat-header flex items-end gap-2 text-xs text-muted-foreground font-semibold">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 overflow-x-hidden max-w-full">
           {message.sender}
           {message.receiver && (
             <>
@@ -215,7 +215,7 @@ const MessageBubble = ({ chat, message, className }: MessageBubbleProps) => {
         )}
       </div>
       <div
-        className={`relative group rounded-md p-2 text-sm break-word word-wrap overflow-x-hidden`}
+        className={`relative group rounded-md p-2 text-sm break-word word-wrap overflow-x-auto`}
       >
         {message.content ? (
           <Markdown>{message.content}</Markdown>

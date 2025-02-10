@@ -7,8 +7,6 @@
 
 env_{{ tool.id }} = dotenv_values(os.path.join(current_dir, '{{ tool.id }}.env'))
 
-print("Loading vars:", env_{{ tool.id }})
-
 {%- for line in tool.code.split('\n') %}
 {{ line }}
 {%- endfor -%}

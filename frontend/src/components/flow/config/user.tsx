@@ -23,13 +23,6 @@ export const UserConfig = ({ nodeId, data }: any) => {
           { value: 'TERMINATE', label: 'On Terminate' },
         ]}
       />
-      <GenericOption
-        type="check"
-        nodeId={nodeId}
-        data={data}
-        name="enable_code_execution"
-        label="Enable Code Execution"
-      />
     </ConversableAgentConfig>
   );
 };

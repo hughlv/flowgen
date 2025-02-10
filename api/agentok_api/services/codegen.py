@@ -305,59 +305,45 @@ class CodegenService:
         return tool_dict
 
     def generate_tool_assignments(self, edges, tool_dict, nodes):
-        # Prepare the tool assignments
         tool_assignments = {}
 
-        # First, process the regular tool assignments from edges
+        # Process regular tool assignments from edges
         for edge in edges:
             if edge.get("data") is not None and edge["data"].get("tools") is not None:
-                # Iterate over edge.data.tools.llm and append node.id to the respective tool_id in llm
                 for tool_id in edge["data"]["tools"]:
                     if tool_id in tool_dict:
                         if tool_id not in tool_assignments:
-                            tool_assignments[tool_id] = {"execution": [], "llm": []}
-                        tool_assignments[tool_id]["execution"].append(edge["source"])
-                        tool_assignments[tool_id]["llm"].append(edge["target"])
+                            tool_assignments[tool_id] = {
+                                "caller": edge["target"],     # The LLM agent that calls the function
+                                "executor": edge["source"],   # The agent that executes the function
+                            }
+                        else:
+                            print(f"Warning: Tool {tool_id} already assigned, skipping duplicate assignment")
                     else:
-                        print(
-                            colored(
-                                f"Assigned tool ID {tool_id} not found in tools", "red"
-                            )
-                        )
+                        print(colored(f"Assigned tool ID {tool_id} not found in tools", "red"))
 
-        # Now process WebSurferAgent tools
+        # Process WebSurferAgent tools
         for edge in edges:
             target_node = next(
                 (node for node in nodes if node["id"] == edge["target"]),
                 None
             )
             if target_node and target_node.get("data", {}).get("class_type") == "WebSurferAgent":
-                # Get the source node (usually a UserProxyAgent) for execution
                 source_node = next(
                     (node for node in nodes if node["id"] == edge["source"]),
                     None
                 )
                 if source_node:
-                    # Get the web tool type from the node's data
                     web_tool = target_node.get("data", {}).get("web_tool", "browser_use")
-                    
-                    # Add the tool registration to the generated code
-                    # We don't need to create a mock function or add to tool_dict
-                    # Instead, we'll handle this in the template by registering websurfer.tools
                     tool_id = f"websurfer_{target_node['id']}"
                     if tool_id not in tool_assignments:
                         tool_assignments[tool_id] = {
-                            "execution": [],
-                            "llm": [],
-                            "is_websurfer": True,  # Flag to indicate this is a WebSurferAgent tool
-                            "web_tool": web_tool,  # Store the web tool type
-                            "websurfer_node_id": target_node["id"]  # Store the WebSurferAgent node ID
+                            "caller": target_node["id"],      # WebSurferAgent calls the function
+                            "executor": source_node["id"],    # UserProxy executes the function
+                            "is_websurfer": True,
+                            "web_tool": web_tool,
+                            "websurfer_node_id": target_node["id"]
                         }
-                    
-                    if source_node["id"] not in tool_assignments[tool_id]["execution"]:
-                        tool_assignments[tool_id]["execution"].append(source_node["id"])
-                    if target_node["id"] not in tool_assignments[tool_id]["llm"]:
-                        tool_assignments[tool_id]["llm"].append(target_node["id"])
 
         return tool_assignments
 
