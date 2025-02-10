@@ -12,7 +12,7 @@ create = true
 prefer-active-python = true
 
 [tool.poetry.dependencies]
-python = ">=3.11,<=3.13"
+python = ">=3.11,<3.13"
 diskcache = "5.6.3"
 fastapi = "0.115.5"
 gotrue = "2.11.0"
