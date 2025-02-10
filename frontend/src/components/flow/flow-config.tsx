@@ -8,6 +8,7 @@ import { useReactFlow } from '@xyflow/react';
 import { InitializerConfig } from './config/initializer';
 import { ProjectConfig } from '../project/project-config';
 import { WebSurferConfig } from './config/websurfer';
+import { DeepSeekConfig } from './config/deepseek';
 
 interface FlowConfigProps {
   nodeId?: string;
@@ -67,6 +68,8 @@ export const FlowConfig = ({ nodeId, edgeId, projectId }: FlowConfigProps) => {
     case 'assistant':
     case 'captain':
       return <AssistantConfig nodeId={nodeId} data={node.data} />;
+    case 'deepseek':
+      return <DeepSeekConfig nodeId={nodeId} data={node.data} />;
     case 'websurfer':
       return <WebSurferConfig nodeId={nodeId} data={node.data} />;
     case 'user':

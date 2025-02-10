@@ -19,3 +19,7 @@ async def issue_apikey(key_to_create: ApiKeyCreate, service: AdminService = Depe
 @router.delete('/api-keys/{key_id}', summary="Delete API key")
 async def delete_apikey(key_id: str, service: AdminService = Depends(get_admin_service)):
   return service.delete_apikey(key_id)
+
+@router.get('/models', summary="Get all model names", response_model=List[str])
+async def get_models(service: AdminService = Depends(get_admin_service)):
+  return service.get_models()

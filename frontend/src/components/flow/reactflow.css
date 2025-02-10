@@ -19,3 +19,15 @@
 .react-flow__resize-control.line {
   display: none;
 }
+
+.react-flow__handle-left {
+  top: 50%;
+  left: 0;
+  transform: translate(-60%, -50%);
+}
+
+.react-flow__handle-right {
+  top: 50%;
+  right: 0;
+  transform: translate(60%, -50%);
+}

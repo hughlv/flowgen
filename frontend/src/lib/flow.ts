@@ -15,7 +15,7 @@ import { CaptainAgentNode } from '@/components/flow/node/captain';
 import { WebSurferNode } from '@/components/flow/node/websurfer';
 import { Icons } from '@/components/icons';
 import { ElementType } from 'react';
-
+import { DeepSeekNode } from '@/components/flow/node/deepseek';
 export const nodeTypes: NodeTypes = {
   initializer: InitializerNode,
   assistant: AssistantNode,
@@ -25,6 +25,7 @@ export const nodeTypes: NodeTypes = {
   conversable: ConversableAgent,
   captain: CaptainAgentNode,
   websurfer: WebSurferNode,
+  deepseek: DeepSeekNode,
   gpt_assistant: GPTAssistantNode,
   retrieve_user: RetrieveUserProxyAgent,
   retrieve_assistant: RetrieveAssistantNode,
@@ -61,6 +62,7 @@ export type NodeMeta = {
   class_type: string; // class name for code generation
   width?: number;
   height?: number;
+  data?: { [key: string]: any };
 };
 
 export const basicNodes: NodeMeta[] = [
@@ -126,6 +128,17 @@ export const advancedNodes: NodeMeta[] = [
     name: 'Web Surfer',
     description: 'A WebSurfer Agent',
     class_type: 'WebSurferAgent',
+  },
+  {
+    id: 'deepseek',
+    icon: Icons.deepseek,
+    name: 'DeepSeek',
+    description: 'A DeepSeek Agent',
+    class_type: 'AssistantAgent',
+    data: {
+      enable_llm: true,
+      model_id: 'deepseek-chat',
+    },
   },
   // {
   //   id: 'retrieve_assistant',

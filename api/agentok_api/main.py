@@ -40,7 +40,7 @@ main_app.include_router(chats.router, prefix="/chats", tags=["Chat"])
 main_app.include_router(tools.router, prefix="/tools", tags=["Tool"])
 main_app.include_router(codegen.router, prefix="/codegen", tags=["Codegen"])
 main_app.include_router(extension.router, prefix="/extensions", tags=["Extension"])
-main_app.include_router(admin.router, prefix="/admin", include_in_schema=False)
+main_app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 
 app = FastAPI()
 app.mount("/v1", main_app)

@@ -28,7 +28,7 @@ node_{{ node.id }} = {{ node.data.class_type }}(
     llm_config=False,
     {%- else %}
     {%- if node.data.model_id %}
-    llm_config=get_llm_config("{{ node.data.model_id }}"),
+    llm_config={"config_list": autogen.filter_config(llm_config["config_list"], filter_dict={"model": ["{{ node.data.model_id }}"]})},
     {%- else %}
     llm_config=llm_config,
     {%- endif %}

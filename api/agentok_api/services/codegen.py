@@ -112,7 +112,7 @@ class CodegenService:
         conversable_nodes = [
             node for node in flow.nodes if node["type"] == "conversable"
         ]
-        ASSISTANT_NODE_TYPES = ["assistant", "captain", "websurfer"]
+        ASSISTANT_NODE_TYPES = ["assistant", "captain", "websurfer", "deepseek"]
         assistant_nodes = [node for node in flow.nodes if node["type"] in ASSISTANT_NODE_TYPES]
         print("assistant_nodes", assistant_nodes)
         gpt_assistant_nodes = [

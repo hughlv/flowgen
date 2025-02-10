@@ -21,14 +21,12 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import './reactflow.css';
-import { nodeTypes, edgeTypes, isConversable } from '@/lib/flow';
+import { nodeTypes, edgeTypes, isConversable, NodeMeta } from '@/lib/flow';
 import { Icons } from '@/components/icons';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { NodeButton } from './node-button';
 import { useProject } from '@/hooks';
 import { debounce } from 'lodash-es';
-import { Button } from '../ui/button';
-import { toast } from '@/hooks/use-toast';
 import { genId } from '@/lib/id';
 
 const DEBOUNCE_DELAY = 500; // Adjust this value as needed
@@ -73,10 +71,7 @@ export const FlowCanvas = ({
   const [nodes, setNodes] = useNodesState<Node>([]);
   const [edges, setEdges] = useEdgesState<Edge>([]);
   const { setIsDirty } = useDebouncedUpdate(projectId);
-  const [mode, setMode] = useState<'flow' | 'python'>('flow');
   const flowParent = useRef<HTMLDivElement>(null);
-  const [isGeneratingPython, setIsGeneratingPython] = useState(false);
-  const [python, setPython] = useState<string>('');
   // Suppress error code 002
   const store = useStoreApi();
   useEffect(() => {
@@ -312,6 +307,7 @@ export const FlowCanvas = ({
       event.preventDefault();
       const data = JSON.parse(event.dataTransfer.getData('application/json'));
       if (!data || !flowParent.current) return;
+      console.log('data', data);
 
       const flowBounds = flowParent.current.getBoundingClientRect();
       const position = screenToFlowPosition({
@@ -321,11 +317,18 @@ export const FlowCanvas = ({
 
       const { offsetX, offsetY, width, height, ...cleanedData } = data;
       const newId = genId();
+      console.log('cleanedData', cleanedData);
       const newNode = {
         id: `${data.id}_${newId}`,
         type: data.id,
+        data: {
+          id: cleanedData.id,
+          name: cleanedData.name,
+          description: cleanedData.description,
+          class_type: cleanedData.class_type,
+          ...(cleanedData.data || {}),
+        },
         position,
-        data: cleanedData,
         width,
         height,
         selected: true,
@@ -400,30 +403,24 @@ export const FlowCanvas = ({
     const isConverseEdge =
       isConversable(sourceNode) && isConversable(targetNode);
     setEdges((eds) => {
-      let newEdges = {
+      let newEdge = {
         ...params,
         strokeWidth: 2,
       };
       if (isConverseEdge) {
-        newEdges = {
-          ...newEdges,
+        newEdge = {
+          ...newEdge,
           animated: true,
           type: 'converse',
         };
       }
-      return addEdge(newEdges, eds);
+      return addEdge(newEdge, eds);
     });
     setIsDirty(true);
   };
 
   const onAddNode = useCallback(
-    (
-      id: string,
-      name: string,
-      class_type: string,
-      width?: number,
-      height?: number
-    ) => {
+    (nodeMeta: NodeMeta) => {
       setNodes((nds) => {
         const newId = genId();
         const bounds = flowParent.current?.getBoundingClientRect();
@@ -441,16 +438,17 @@ export const FlowCanvas = ({
         });
 
         const newNode: Node = {
-          id: `${id}_${newId}`,
-          type: id,
+          id: `${nodeMeta.id}_${newId}`,
+          type: nodeMeta.id,
           position,
           data: {
-            id,
-            name,
-            class_type,
+            id: nodeMeta.id,
+            name: nodeMeta.name,
+            class_type: nodeMeta.class_type,
+            ...nodeMeta.data, // Spread any additional data properties
           },
-          width,
-          height,
+          width: nodeMeta.width,
+          height: nodeMeta.height,
           selected: true,
           draggable: true,
           selectable: true,

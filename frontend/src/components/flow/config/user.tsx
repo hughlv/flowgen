@@ -10,19 +10,6 @@ export const UserConfig = ({ nodeId, data }: any) => {
       nodeId={nodeId}
       data={data}
       toolScene={'user'}
-    >
-      <GenericOption
-        type="select"
-        nodeId={nodeId}
-        data={data}
-        name="human_input_mode"
-        label="Human Input Mode"
-        options={[
-          { value: 'NEVER', label: 'Never' },
-          { value: 'ALWAYS', label: 'Always' },
-          { value: 'TERMINATE', label: 'On Terminate' },
-        ]}
-      />
-    </ConversableAgentConfig>
+    ></ConversableAgentConfig>
   );
 };

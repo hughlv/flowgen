@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { advancedNodes, basicNodes, getNodeIcon } from '@/lib/flow';
+import { advancedNodes, basicNodes, getNodeIcon, NodeMeta } from '@/lib/flow';
 import {
   Accordion,
   AccordionContent,
@@ -11,29 +11,22 @@ import {
 import { cn } from '@/lib/utils';
 import { PopoverClose } from '../ui/popover';
 
-interface NodeItemProps {
-  id: string;
-  name: string;
-  type: string;
-  description?: string;
-  class_type: string;
-  width?: number;
-  height?: number;
-}
+interface NodeItemProps extends NodeMeta {}
 
 const NodeItem = ({
   id,
   name,
-  type,
   description,
   class_type,
   width,
   height,
+  icon,
+  data,
 }: NodeItemProps) => {
-  const NodeIcon = getNodeIcon(type);
+  const NodeIcon = icon || getNodeIcon(id);
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
-    nodeData: any
+    nodeData: NodeMeta
   ) => {
     event.dataTransfer.setData('application/json', JSON.stringify(nodeData));
   };
@@ -46,7 +39,16 @@ const NodeItem = ({
       )}
       draggable
       onDragStart={(e: React.DragEvent<HTMLDivElement>) =>
-        onDragStart(e, { id, name, type, class_type, width, height })
+        onDragStart(e, {
+          id,
+          name,
+          description,
+          class_type,
+          width,
+          height,
+          icon,
+          data,
+        })
       }
     >
       <div className="flex items-center gap-2 w-full h-full">
@@ -63,13 +65,7 @@ const NodeItem = ({
 export const NodeList = ({
   onAddNode,
 }: {
-  onAddNode: (
-    id: string,
-    name: string,
-    class_type: string,
-    width?: number,
-    height?: number
-  ) => void;
+  onAddNode: (nodeMeta: NodeMeta) => void;
 }) => {
   const nodeCategories = [
     {
@@ -95,27 +91,8 @@ export const NodeList = ({
           <AccordionContent>
             <div className="flex flex-col gap-1">
               {nodes.map((node) => (
-                <PopoverClose
-                  key={node.id}
-                  onClick={() =>
-                    onAddNode(
-                      node.id,
-                      node.name,
-                      node.class_type,
-                      node.width,
-                      node.height
-                    )
-                  }
-                >
-                  <NodeItem
-                    id={node.id}
-                    name={node.name}
-                    type={node.id}
-                    description={node.description}
-                    class_type={node.class_type}
-                    width={node.width}
-                    height={node.height}
-                  />
+                <PopoverClose key={node.id} onClick={() => onAddNode(node)}>
+                  <NodeItem {...node} />
                 </PopoverClose>
               ))}
             </div>

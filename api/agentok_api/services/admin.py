@@ -1,6 +1,6 @@
 import secrets
 from typing import Dict, List
-
+import autogen
 from ..models import ApiKey, ApiKeyCreate
 from .supabase import SupabaseClient
 
@@ -20,3 +20,19 @@ class AdminService:
 
     def delete_apikey(self, apikey_id: str) -> Dict:
         return self.supabase.delete_apikey(apikey_id)
+
+    def get_models(self) -> List[str]:
+        config_list = []
+
+        # Extend config_list with settings['models'] if available
+        user_settings = self.supabase.fetch_general_settings()
+        if user_settings and "general" in user_settings and 'models' in user_settings["general"]:
+            config_list.extend([model["model"] for model in user_settings["general"]["models"] if model["enabled"] == True])
+
+        oai_configs = autogen.config_list_from_json(
+            env_or_file="OAI_CONFIG_LIST",
+            file_location=".",
+        )
+        config_list.extend([config["model"] for config in oai_configs])
+
+        return config_list

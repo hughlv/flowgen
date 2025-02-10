@@ -1,12 +1,7 @@
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { GenericOption } from '../option/option';
-import { useSettings } from '@/hooks/use-settings';
-
-interface FieldProps {
-  label: string;
-  onChange: (value: string) => void;
-  value: string;
-}
+import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 export const ConversableAgentConfig = ({
   nodeId,
@@ -15,7 +10,12 @@ export const ConversableAgentConfig = ({
   className,
   ...props
 }: any) => {
-  const { settings } = useSettings();
+  const [models, setModels] = useState<any[]>([]);
+  useEffect(() => {
+    fetch('/api/models')
+      .then((res) => res.json())
+      .then((data) => setModels(data));
+  }, []);
 
   const GENERAL_OPTIONS = [
     {
@@ -72,9 +72,9 @@ export const ConversableAgentConfig = ({
       label: 'AI Model',
       disabled: !data?.enable_llm,
       options:
-        settings?.models?.map((model) => ({
-          value: model.id,
-          label: model.model,
+        models.map((model) => ({
+          value: model,
+          label: model,
         })) || [],
     },
     {
@@ -86,7 +86,10 @@ export const ConversableAgentConfig = ({
 
   return (
     <ScrollArea>
-      <div key={nodeId} className="flex flex-col gap-4 w-full h-full p-2">
+      <div
+        key={nodeId}
+        className={cn(className, 'flex flex-col gap-4 w-full h-full p-2')}
+      >
         {GENERAL_OPTIONS.filter((o) => !optionsDisabled.includes(o.name)).map(
           (options, index) => (
             <GenericOption

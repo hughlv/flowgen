@@ -35,6 +35,7 @@ export const SelectOption = ({
     >
       <Label className="whitespace-nowrap">{label}</Label>
       <Select
+        key={`${disabled}-${currentValue}`}
         value={currentValue}
         onValueChange={(value) => onValueChange && onValueChange(name, value)}
         disabled={disabled}

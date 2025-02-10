@@ -83,44 +83,37 @@ const ModelForm = ({ model: sourceModel, onSave }: any) => {
           />
         </label>
       </div>
-      <Collapsible className="w-full">
-        <CollapsibleTrigger asChild>
-          <div className="flex items-center gap-2 py-2">
-            <span>Show Advanced Options</span>
-            <Icons.chevronsUpDown className="w-4 h-4" />
-          </div>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="grid grid-cols-2 gap-4 w-full">
-          <label className="flex flex-col gap-1 w-full">
-            <span>Base URL</span>
-            <Input
-              value={baseUrl || ''}
-              onChange={(e) => handleFieldChange('base_url', e.target.value)}
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span>API Type (e.g., azure)</span>
-            <Input
-              value={apiType || ''}
-              onChange={(e) => handleFieldChange('api_type', e.target.value)}
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span>API Version</span>
-            <Input
-              value={apiVersion || ''}
-              onChange={(e) => handleFieldChange('api_version', e.target.value)}
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span>Tags (Use comma as separater)</span>
-            <Input
-              value={tags || ''}
-              onChange={(e) => handleFieldChange('tags', e.target.value)}
-            />
-          </label>
-        </CollapsibleContent>
-      </Collapsible>{' '}
+
+      <div className="grid grid-cols-2 gap-4 w-full">
+        <label className="flex flex-col gap-1 w-full">
+          <span>Base URL</span>
+          <Input
+            value={baseUrl || ''}
+            onChange={(e) => handleFieldChange('base_url', e.target.value)}
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span>API Type (e.g., azure)</span>
+          <Input
+            value={apiType || ''}
+            onChange={(e) => handleFieldChange('api_type', e.target.value)}
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span>API Version</span>
+          <Input
+            value={apiVersion || ''}
+            onChange={(e) => handleFieldChange('api_version', e.target.value)}
+          />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span>Tags (Use comma as separater)</span>
+          <Input
+            value={tags || ''}
+            onChange={(e) => handleFieldChange('tags', e.target.value)}
+          />
+        </label>
+      </div>
     </div>
   );
 };
