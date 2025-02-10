@@ -48,7 +48,7 @@ export const GroupNode: ComponentType<NodeProps> = ({
           'border-2 border-dashed transition-colors duration-200',
           selected
             ? 'border-purple-500 text-purple-500 bg-purple-500/10'
-            : 'border-primary/40 text-primary/40',
+            : 'border-purple-500/80 text-purple-500/80 bg-purple-500/5',
           isHovered && 'border-blue-500 bg-blue-500/20 text-blue-500'
         )}
       >

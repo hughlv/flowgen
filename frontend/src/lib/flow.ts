@@ -13,9 +13,7 @@ import { RetrieveUserProxyAgent } from '@/components/flow/node/retrieve-user';
 import { RetrieveAssistantNode } from '@/components/flow/node/retrieve-assistant';
 import { CaptainAgentNode } from '@/components/flow/node/captain';
 import { WebSurferNode } from '@/components/flow/node/websurfer';
-// Import icons from the new icons file
-import { Icons, Icon } from '@/components/icons';
-import { LucideIcon } from 'lucide-react';
+import { Icons } from '@/components/icons';
 import { ElementType } from 'react';
 
 export const nodeTypes: NodeTypes = {
@@ -109,6 +107,8 @@ export const basicNodes: NodeMeta[] = [
     name: 'Note',
     description: 'Work as comment for the flow and node',
     class_type: 'Note',
+    width: 400,
+    height: 200,
   },
 ];
 

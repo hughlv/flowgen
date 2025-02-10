@@ -4,7 +4,6 @@ import React, { memo, useEffect, useState } from 'react';
 import {
   useReactFlow,
   NodeProps,
-  NodeResizer,
   NodeResizeControl,
   NodeToolbar,
   Position,
@@ -33,10 +32,7 @@ export const NoteNode = memo(
     };
 
     return (
-      <div
-        className="relative group flex flex-col gap-2 w-full min-w-[200px] min-h-[100px] bg-yellow-500/40 backdrop-blur-sm rounded-md p-2"
-        onClick={() => setEditing(true)}
-      >
+      <>
         <NodeToolbar isVisible={selected} position={Position.Top} align={'end'}>
           <Button
             variant="ghost"
@@ -47,15 +43,36 @@ export const NoteNode = memo(
             <Icons.trash className="w-4 h-4" />
           </Button>
         </NodeToolbar>
-        <div className="flex items-center gap-2">
-          <Icons.note className="w-4 h-4" />
-          <span className="text-xs">Note</span>
+        <div className="relative group flex flex-col gap-2 w-full h-full min-w-[200px] min-h-[50px] bg-yellow-500/40 border-2 border-yellow-500/50 backdrop-blur-sm rounded-md p-2">
+          <div className="flex items-center gap-2">
+            <Icons.note className="w-4 h-4" />
+            <span>Note</span>
+          </div>
+          {editing ? (
+            <Textarea
+              autoFocus
+              className="w-full h-full text-sm nodrag nowheel bg-white/10 focus:text-primary p-1 rounded"
+              value={data.content as string}
+              placeholder="Enter note content..."
+              onChange={handleChange}
+              onBlur={() => setEditing(false)}
+            />
+          ) : (
+            <div
+              className="w-full h-full cursor-text"
+              onClick={() => setEditing(true)}
+            >
+              <Markdown className="text-left text-sm">
+                {data.content ?? 'Click to add note...'}
+              </Markdown>
+            </div>
+          )}
         </div>
         <NodeResizeControl
           className="custom-resize-handle"
           position={'bottom-right'}
-          minWidth={400}
-          minHeight={300}
+          minWidth={200}
+          minHeight={100}
           style={{
             background: 'transparent',
             border: 'none',
@@ -63,26 +80,7 @@ export const NoteNode = memo(
         >
           <Icons.resize className="w-4 h-4" />
         </NodeResizeControl>
-        {editing ? (
-          <Textarea
-            autoFocus
-            className="w-full min-h-[100px] text-sm nodrag nowheel bg-white/10 focus:text-primary p-1 rounded"
-            value={data.content as string}
-            placeholder="Enter note content..."
-            onChange={handleChange}
-            onBlur={() => setEditing(false)}
-          />
-        ) : (
-          <div
-            className="w-full min-h-[100px] cursor-text"
-            onClick={() => setEditing(true)}
-          >
-            <Markdown className="text-left text-sm">
-              {data.content ?? 'Click to add note...'}
-            </Markdown>
-          </div>
-        )}
-      </div>
+      </>
     );
   }
 );

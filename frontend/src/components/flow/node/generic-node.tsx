@@ -62,10 +62,20 @@ export const GenericNode: ComponentType<GenericNodeProps> = ({
           type={type}
           position={type === 'target' ? Position.Left : Position.Right}
           id={`${type}-${name}`}
-          className={cn('w-3 h-3 rounded-full border-2', {
-            'border-brand/80 bg-background': selected,
-            'border-muted-foreground/80 bg-background': !selected,
-          })}
+          className={cn(
+            '!w-2 !h-2 !rounded-full !border-2',
+            selected
+              ? '!border-brand/80 !bg-brand'
+              : '!border-muted-foreground/80 !bg-muted-foreground'
+          )}
+          style={{
+            border: selected
+              ? '2px solid rgb(var(--brand) / 0.8)'
+              : '2px solid rgb(var(--muted-foreground) / 0.8)',
+            background: selected
+              ? 'rgb(var(--brand) / 0.6)'
+              : 'rgb(var(--muted-foreground) / 0.6)',
+          }}
         />
       ))}
     </div>
