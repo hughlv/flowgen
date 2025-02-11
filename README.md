@@ -164,3 +164,18 @@ We enforce [Commitlint](https://commitlint.js.org/#/) conventions for commit mes
 ## 📝 License
 
 This project is licensed under the [Apache 2.0 License with additional terms and conditions](./LICENSE.md).
+
+## 📖 Citation
+
+If you find this project useful, please consider citing it:
+
+```bibtex
+@misc{agentok,
+  author = {Dustland},
+  title = {Agentok Studio},
+  year = {2025},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/dustland/agentok}}
+}
+```
